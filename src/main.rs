@@ -3,7 +3,7 @@ use dialoguer::{theme::ColorfulTheme, Confirm, Input, Select};
 mod item;
 mod storage;
 use item::{Item, Recipe, Ingredient};
-use storage::Config;
+use storage::{Config, RecipeBook};
 
 fn main() -> Result<(), anyhow::Error> {
     let theme = ColorfulTheme::default();
@@ -11,6 +11,7 @@ fn main() -> Result<(), anyhow::Error> {
     // let new_item = new_item()?;
     // dbg!(new_item);
 
+    // load config file ==========
     let mut config: Config = Config::new();
     if let Ok(conf) = Config::from_file() {
         config = conf;
@@ -24,6 +25,29 @@ fn main() -> Result<(), anyhow::Error> {
             Config::save_file(&config)?;
         }
     }
+    // load config file ==========
+
+    // select recipe book ========
+    let choice = Select::with_theme(&theme)
+        .with_prompt("Select a recipe book")
+        .default(0)
+        .item("create new book")
+        .interact()?;
+    match choice {
+        0 => new_recipe_book()?,
+        _ => unreachable!()
+    }
+    // select recipe book ========
+
+    Ok(())
+}
+
+fn new_recipe_book() -> Result<(), anyhow::Error> {
+    let name = Input::with_theme(&ColorfulTheme::default())
+        .with_prompt("Name")
+        .interact()?;
+    let book = RecipeBook::new(name);
+    book.save()?;
 
     Ok(())
 }
