@@ -1,10 +1,7 @@
 /// Fully defines any item involved in the crafting process.
 #[derive(Debug)]
 pub struct Item {
-    /// Internal item name used for identification.
-    pub id: String,
-
-    /// Item name displayed to the user.
+    /// Item name, used both for display and identification
     pub name: String,
 
     /// An optional recipe defining the process to craft the item.
@@ -35,8 +32,8 @@ pub struct Recipe {
 /// A reference to an *Item* and a count, used in *Recipes*.
 #[derive(Debug)]
 pub struct Ingredient {
-    /// ID corresponding to an instance of *Item*.
-    pub id: String,
+    /// Ingredient name corresponding to an instance of *Item*.
+    pub name: String,
     /// The number of the specified item used the recipe.
     pub count: f32,
 }

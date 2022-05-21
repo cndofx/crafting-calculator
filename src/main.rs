@@ -19,10 +19,6 @@ fn new_item() -> Result<Item, anyhow::Error> {
         .with_prompt("Item Name")
         .interact()?;
 
-    let id = Input::with_theme(&theme)
-        .with_prompt("Item ID")
-        .interact()?;
-
     let has_recipe = Select::with_theme(&theme)
         .with_prompt("Has recipe?")
         .default(0)
@@ -61,14 +57,14 @@ fn new_item() -> Result<Item, anyhow::Error> {
                             {
                                 continue;
                             }
-                            ingredients.push(Ingredient { id: name, count: count });
+                            ingredients.push(Ingredient { name, count });
                             break;
                         }
                     },
                     // list ingredients
                     1 => {
                         for ingredient in ingredients.iter() {
-                            println!("{} {}", ingredient.count, ingredient.id);
+                            println!("{} {}", ingredient.count, ingredient.name);
                         }
                     },
                     // confirm
@@ -106,7 +102,6 @@ fn new_item() -> Result<Item, anyhow::Error> {
     };
 
     Ok(Item {
-        id,
         name,
         recipe,
     })
