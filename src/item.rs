@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 /// An `Item` fully defines any item involved in the crafting process,
 /// whether it's craftable or not.
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
     /// String used both for item display and identification.
     pub name: String,
@@ -11,7 +13,7 @@ pub struct Item {
 }
 
 /// A `Recipe` is a vector of type `Ingredient` and other data defining a crafting recipe.
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Recipe {
     /// Vector of all the ingredients used in the recipe.
     /// ### Example:
@@ -34,7 +36,7 @@ pub struct Recipe {
 }
 
 /// An `Ingredient` is a reference to an `Item` and a count, used in a `Recipe`.
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Ingredient {
     /// Ingredient name corresponding to an instance of `Item`.
     pub name: String,
