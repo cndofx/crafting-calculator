@@ -1,19 +1,20 @@
-/// Fully defines any item involved in the crafting process.
+/// An `Item` fully defines any item involved in the crafting process,
+/// whether it's craftable or not.
 #[derive(Debug)]
 pub struct Item {
-    /// Item name, used both for display and identification
+    /// String used both for item display and identification.
     pub name: String,
 
-    /// An optional recipe defining the process to craft the item.
-    /// Set to *None* if the item is a raw material or can't be crafted.
+    /// Optional recipe defining the process to craft the item.
+    /// Set to `None` if the item is a raw material or can't be crafted.
     pub recipe: Option<Recipe>,
 }
 
-/// A vector of *Ingredients* and other data defining a crafting recipe.
+/// A `Recipe` is a vector of type `Ingredient` and other data defining a crafting recipe.
 #[derive(Debug)]
 pub struct Recipe {
-    /// A vector of all the ingredients used to craft this item.
-    /// # Example:
+    /// Vector of all the ingredients used in the recipe.
+    /// ### Example:
     /// ```
     /// ingredients: vec![
     ///     Ingredient{ id: "iron_ore".to_string(), count: 1.0 },
@@ -22,18 +23,21 @@ pub struct Recipe {
     /// ```
     pub ingredients: Vec<Ingredient>,
 
-    /// A float specifying the time it takes to process/craft this item in seconds.
+    /// Float specifying the time it takes to process/craft this item in seconds.
     pub processing_time: f32,
 
-    /// The number of items produced per recipe on average.
+    /// Number of items produced per recipe.
+    /// It allows floating point values in cases where the output isn't
+    /// always the same. For example, if a recipe produces 1 item, but with
+    /// a 50% chance to produce an additional item, `result` would be 1.5.
     pub result: f32,
 }
 
-/// A reference to an *Item* and a count, used in *Recipes*.
+/// An `Ingredient` is a reference to an `Item` and a count, used in a `Recipe`.
 #[derive(Debug)]
 pub struct Ingredient {
-    /// Ingredient name corresponding to an instance of *Item*.
+    /// Ingredient name corresponding to an instance of `Item`.
     pub name: String,
-    /// The number of the specified item used the recipe.
+    /// Number of the specified item used the recipe.
     pub count: f32,
 }
