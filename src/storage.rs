@@ -7,29 +7,6 @@ use std::io::{BufReader, Write, Read};
 use crate::item::{Item, Recipe};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Config {
-    recipe_books: Vec<String>
-}
-
-impl Config {
-    pub fn new() -> Config {
-        Config { recipe_books: Vec::new() }
-    }
-
-    pub fn from_file() -> Result<Config, anyhow::Error> {
-        let data = load_file_to_string("config.json")?;
-        Ok(serde_json::from_str(&data)?)
-    }
-
-    pub fn save_file(config: &Config) -> Result<(), anyhow::Error> {
-        let data = serde_json::to_string_pretty(&config)?;
-        let mut file = OpenOptions::new().write(true).create(true).open("config.json")?;
-        file.write_all(&data.as_bytes())?;
-        Ok(())
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 pub struct RecipeBook {
     name: String,
     items: HashMap<String, Item>,

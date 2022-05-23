@@ -3,29 +3,13 @@ use dialoguer::{theme::ColorfulTheme, Confirm, Input, Select};
 mod item;
 mod storage;
 use item::{Item, Recipe, Ingredient};
-use storage::{Config, RecipeBook};
+use storage::RecipeBook;
 
 fn main() -> Result<(), anyhow::Error> {
     let theme = ColorfulTheme::default();
 
     // let new_item = new_item()?;
     // dbg!(new_item);
-
-    // load config file ==========
-    let mut config: Config = Config::new();
-    if let Ok(conf) = Config::from_file() {
-        config = conf;
-    }
-    else {
-        if Confirm::with_theme(&theme)
-            .with_prompt("'config.json' cannot be read. Generate a new config?")
-            .interact()?
-        {
-            config = Config::new();
-            Config::save_file(&config)?;
-        }
-    }
-    // load config file ==========
 
     // select recipe book ========
     let choice = Select::with_theme(&theme)
