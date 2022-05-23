@@ -35,15 +35,15 @@ impl RecipeBook {
     /// path("example_book")
     /// ```
     /// returns `./recipebooks/cool_book.json`
-    pub fn path(name: &String) -> String {
+    pub fn path(name: &str) -> String {
         format!("./recipebooks/{}.json", name)
     }
 
     /// Loads and returns the `RecipeBook` with the given `name`. (Not the filename)
     ///
     /// Location determined by `RecipeBook::path()`
-    pub fn load(name: String) -> Result<RecipeBook, anyhow::Error> {
-        let path = RecipeBook::path(&name);
+    pub fn load(name: &str) -> Result<RecipeBook, anyhow::Error> {
+        let path = RecipeBook::path(name);
         let data = load_file_to_string(&path)?;
         Ok(serde_json::from_str(&data)?)
     }
@@ -56,6 +56,39 @@ impl RecipeBook {
         let mut file = OpenOptions::new().write(true).create(true).open(&path)?;
         file.write_all(&data.as_bytes())?;
         Ok(())
+    }
+
+    /// Reads the ./recipebooks/ directory and returns a vector of all the book names.
+    pub fn get_book_names() -> Result<Vec<String>, anyhow::Error> {
+        // reads files in recipebooks/
+        // returns None if the directory does not exist
+        let files: Option<std::fs::ReadDir> = match std::fs::read_dir("./recipebooks/") {
+            Ok(files) => Some(files),
+            Err(_) => None,
+        };
+
+        // converts Option<ReadDir> into Vec<String> in a concerning way
+        let mut names: Vec<String> = if let Some(_) = &files {
+            // nightmare
+            files
+                .unwrap()
+                .map(|file| {
+                    file.unwrap()
+                        .path()
+                        .file_stem()
+                        .unwrap()
+                        .to_str()
+                        .unwrap()
+                        .to_string()
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
+
+        names.sort();
+
+        Ok(names)
     }
 }
 
