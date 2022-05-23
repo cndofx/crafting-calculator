@@ -34,7 +34,7 @@ impl RecipeBook {
     /// ```
     /// path("example_book")
     /// ```
-    /// returns `./recipebooks/cool_book.json`
+    /// returns `./recipebooks/example_book.json`
     pub fn path(name: &str) -> String {
         format!("./recipebooks/{}.json", name)
     }
