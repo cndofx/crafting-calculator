@@ -7,6 +7,8 @@ mod storage;
 use item::Recipe;
 use storage::RecipeBook;
 
+use crate::interface::new_item;
+
 fn main() -> Result<(), anyhow::Error> {
     let theme = ColorfulTheme::default();
 
@@ -14,7 +16,7 @@ fn main() -> Result<(), anyhow::Error> {
     // dbg!(new_item);
 
     // select recipe book ========
-    let recipe_book: RecipeBook;
+    let mut recipe_book: RecipeBook;
     loop {
         let recipe_books = RecipeBook::get_book_names()?;
 
@@ -35,6 +37,12 @@ fn main() -> Result<(), anyhow::Error> {
     // select recipe book ========
 
     println!("selected book: {:?}", recipe_book);
+
+    let test_item = new_item()?;
+    recipe_book.add_item(test_item);
+
+    //dbg!(&recipe_book);
+    recipe_book.save()?;
 
     Ok(())
 }

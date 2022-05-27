@@ -39,6 +39,10 @@ impl RecipeBook {
         format!("./recipebooks/{}.json", name)
     }
 
+    pub fn add_item(&mut self, item: Item) {
+        self.items.insert(item.name.clone(), item);
+    }
+
     /// Loads and returns the `RecipeBook` with the given `name`. (Not the filename)
     ///
     /// Location determined by `RecipeBook::path()`
