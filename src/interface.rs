@@ -32,79 +32,82 @@ pub fn new_item() -> Result<Item, anyhow::Error> {
         // set recipe to none
         0 => None,
         // define a new recipe
-        1 => {
-            let mut ingredients: Vec<Ingredient> = Vec::new();
-            loop {
-                let choice = Select::with_theme(&theme)
-                    .with_prompt("Recipe Editor")
-                    .default(0)
-                    .item("add ingredient")
-                    .item("list ingredients")
-                    .item("confirm")
-                    .interact()?;
-
-                match choice {
-                    // add ingredient
-                    0 => {
-                        loop {
-                            let name = Input::with_theme(&theme)
-                                .with_prompt("Ingredient Name")
-                                .interact()?;
-                            let count = Input::with_theme(&theme)
-                                .with_prompt("Ingredient Count")
-                                .interact()?;
-                            if !Confirm::with_theme(&theme)
-                                .with_prompt(format!("Add {} {} to the list?", count, name))
-                                .interact()?
-                            {
-                                continue;
-                            }
-                            ingredients.push(Ingredient { name, count });
-                            break;
-                        }
-                    },
-                    // list ingredients
-                    1 => {
-                        for ingredient in ingredients.iter() {
-                            println!("{} {}", ingredient.count, ingredient.name);
-                        }
-                    },
-                    // confirm
-                    2 => {
-                        if Confirm::with_theme(&theme)
-                            .with_prompt("Confirm ingredients?")
-                            .interact()?
-                        {
-                            break;
-                        }
-                    },
-                    _ => unreachable!(),
-                }
-            }
-            
-            let processing_time = Input::with_theme(&theme)
-                .with_prompt("How many seconds does it take to craft?")
-                .default("0.0".to_string())
-                .interact()?;
-            let result = Input::with_theme(&theme)
-                .with_prompt("How many resulting items per craft?")
-                .default("1.0".to_string())
-                .interact()?;
-            
-            let processing_time = processing_time.parse::<f32>().unwrap();
-            let result = result.parse::<f32>().unwrap();
-
-            Some(Recipe {
-                ingredients,
-                processing_time,
-                result,
-            })
-        }
+        1 => Some(new_recipe()?),
         _ => unreachable!(),
     };
 
     Ok(Item {
         name,
         recipe,
+    })
+}
+
+pub fn new_recipe() -> Result<Recipe, anyhow::Error> {
+    let theme = ColorfulTheme::default();
+    let mut ingredients: Vec<Ingredient> = Vec::new();
+    loop {
+        let choice = Select::with_theme(&theme)
+            .with_prompt("Recipe Editor")
+            .default(0)
+            .item("add ingredient")
+            .item("list ingredients")
+            .item("confirm")
+            .interact()?;
+
+        match choice {
+            // add ingredient
+            0 => {
+                loop {
+                    let name = Input::with_theme(&theme)
+                        .with_prompt("Ingredient Name")
+                        .interact()?;
+                    let count = Input::with_theme(&theme)
+                        .with_prompt("Ingredient Count")
+                        .interact()?;
+                    if !Confirm::with_theme(&theme)
+                        .with_prompt(format!("Add {} {} to the list?", count, name))
+                        .interact()?
+                    {
+                        continue;
+                    }
+                    ingredients.push(Ingredient { name, count });
+                    break;
+                }
+            },
+            // list ingredients
+            1 => {
+                for ingredient in ingredients.iter() {
+                    println!("({}) {}", ingredient.count, ingredient.name);
+                }
+            },
+            // confirm
+            2 => {
+                if Confirm::with_theme(&theme)
+                    .with_prompt("Confirm ingredients?")
+                    .interact()?
+                {
+                    break;
+                }
+            },
+            _ => unreachable!(),
+        }
+    }
+
+    let processing_time = Input::with_theme(&theme)
+        .with_prompt("How many seconds does it take to craft?")
+        .default("0.0".to_string())
+        .interact()?;
+    let result = Input::with_theme(&theme)
+        .with_prompt("How many resulting items per craft?")
+        .default("1.0".to_string())
+        .interact()?;
+    
+    let processing_time = processing_time.parse::<f32>().unwrap();
+    let result = result.parse::<f32>().unwrap();
+
+    Ok(Recipe {
+        ingredients,
+        processing_time,
+        result,
     })
 }
